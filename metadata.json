@@ -1,0 +1,8 @@
+{
+  "name": "W9 Teacher Portfolio & Evaluation System",
+  "description": "A professional online portfolio system for Thai teacher performance evaluation (W9), featuring aspect-based categorization, media embedding, and an admin management panel.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
