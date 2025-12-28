@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { MediaType } from '../types';
 
@@ -17,9 +16,6 @@ const MediaRenderer: React.FC<MediaRendererProps> = ({ type, url, title }) => {
     }
     
     if (type === MediaType.GOOGLE_SHEETS) {
-      // Convert standard edit link to pubhtml for clean embedding
-      // From: https://docs.google.com/spreadsheets/d/ID/edit...
-      // To: https://docs.google.com/spreadsheets/d/ID/pubhtml?widget=true&headers=false
       if (url.includes('/spreadsheets/d/')) {
         const parts = url.split('/spreadsheets/d/');
         const id = parts[1].split('/')[0];
@@ -31,18 +27,22 @@ const MediaRenderer: React.FC<MediaRendererProps> = ({ type, url, title }) => {
     return url;
   };
 
+  const containerClass = "w-full overflow-hidden rounded-xl bg-white shadow-sm border border-slate-200/50";
+
   switch (type) {
     case MediaType.IMAGE:
       return (
-        <img 
-          src={url} 
-          alt={title} 
-          className="w-full h-auto rounded-lg shadow-sm border border-gray-100 object-cover max-h-[600px]" 
-        />
+        <div className={containerClass}>
+          <img 
+            src={url} 
+            alt={title} 
+            className="w-full h-auto object-cover max-h-[700px] hover:scale-[1.01] transition-transform duration-500" 
+          />
+        </div>
       );
     case MediaType.YOUTUBE:
       return (
-        <div className="relative pb-[56.25%] h-0 overflow-hidden rounded-lg shadow-lg border border-gray-200">
+        <div className={`${containerClass} relative pb-[56.25%] h-0`}>
           <iframe
             className="absolute top-0 left-0 w-full h-full"
             src={getEmbedUrl(url)}
@@ -54,38 +54,35 @@ const MediaRenderer: React.FC<MediaRendererProps> = ({ type, url, title }) => {
         </div>
       );
     case MediaType.GOOGLE_SHEETS:
+    case MediaType.PDF:
       return (
-        <div className="w-full h-[600px] rounded-lg overflow-hidden border border-gray-200 shadow-md">
+        <div className={`${containerClass} h-[650px]`}>
           <iframe
-            src={getEmbedUrl(url)}
-            className="w-full h-full"
+            src={type === MediaType.PDF ? `${url}#toolbar=0` : getEmbedUrl(url)}
+            className="w-full h-full bg-slate-50"
             title={title}
             loading="lazy"
           ></iframe>
         </div>
       );
-    case MediaType.PDF:
-      return (
-        <div className="w-full h-[600px] rounded-lg overflow-hidden border border-gray-200 shadow-md">
-          <iframe
-            src={`${url}#toolbar=0`}
-            className="w-full h-full"
-            title={title}
-          ></iframe>
-        </div>
-      );
     case MediaType.VIDEO:
       return (
-        <video 
-          controls 
-          className="w-full h-auto rounded-lg shadow-lg border border-gray-200 max-h-[600px]"
-        >
-          <source src={url} type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
+        <div className={containerClass}>
+          <video 
+            controls 
+            className="w-full h-auto max-h-[700px] bg-black"
+          >
+            <source src={url} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </div>
       );
     default:
-      return <div className="p-4 bg-gray-100 rounded text-gray-500">รูปแบบไฟล์ไม่รองรับ</div>;
+      return (
+        <div className="p-12 bg-slate-50 rounded-xl text-center border-2 border-dashed border-slate-200">
+          <p className="text-slate-400 font-medium">ไม่รองรับรูปแบบไฟล์ {type}</p>
+        </div>
+      );
   }
 };
 

@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Lock, User, AlertCircle } from 'lucide-react';
+import { Lock, User, AlertCircle, ShieldCheck } from 'lucide-react';
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -15,57 +14,62 @@ const Login: React.FC = () => {
       localStorage.setItem('isLoggedIn', 'true');
       navigate('/admin/dashboard');
     } else {
-      setError('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง (ใบ้: admin / 1234)');
+      setError('รหัสผ่านไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง');
     }
   };
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
-        <div className="p-8">
-          <div className="text-center mb-10">
-            <div className="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <Lock size={32} />
+    <div className="min-h-[85vh] flex items-center justify-center p-6 relative">
+      {/* Decorative Blobs */}
+      <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-sky-500/10 rounded-full blur-3xl"></div>
+
+      <div className="max-w-md w-full glass-card rounded-[3rem] overflow-hidden relative">
+        <div className="h-2 bg-gradient-to-r from-indigo-600 via-blue-600 to-sky-500"></div>
+        <div className="p-12">
+          <div className="text-center mb-12">
+            <div className="w-20 h-20 bg-gradient-to-br from-indigo-600 to-blue-600 text-white rounded-[2rem] flex items-center justify-center mx-auto mb-6 shadow-xl shadow-blue-200">
+              <ShieldCheck size={40} />
             </div>
-            <h1 className="text-2xl font-bold text-gray-900">เข้าสู่ระบบผู้ดูแล</h1>
-            <p className="text-gray-500 mt-2">จัดการผลงานและข้อมูลวิทยฐานะ</p>
+            <h1 className="text-3xl font-black text-slate-900 tracking-tight">แอดมินพาเนล</h1>
+            <p className="text-slate-400 mt-3 text-sm font-bold uppercase tracking-[0.2em]">Restricted Access</p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-6">
             {error && (
-              <div className="flex items-center gap-2 p-4 bg-red-50 text-red-600 rounded-xl text-sm">
+              <div className="flex items-center gap-3 p-4 bg-red-50 border border-red-100 text-red-600 rounded-2xl text-xs font-bold animate-shake">
                 <AlertCircle size={18} /> {error}
               </div>
             )}
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">ชื่อผู้ใช้</label>
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Username</label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                  <User size={18} />
+                <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-slate-400">
+                  <User size={20} />
                 </div>
                 <input
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-xl focus:ring-blue-500 focus:border-blue-500 text-sm"
-                  placeholder="admin"
+                  className="block w-full pl-14 pr-6 py-4 bg-white/50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 focus:bg-white text-sm font-semibold transition-all"
+                  placeholder="ผู้จัดการระบบ"
                   required
                 />
               </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">รหัสผ่าน</label>
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Password</label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                  <Lock size={18} />
+                <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-slate-400">
+                  <Lock size={20} />
                 </div>
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-xl focus:ring-blue-500 focus:border-blue-500 text-sm"
+                  className="block w-full pl-14 pr-6 py-4 bg-white/50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 focus:bg-white text-sm font-semibold transition-all"
                   placeholder="••••••••"
                   required
                 />
@@ -74,14 +78,14 @@ const Login: React.FC = () => {
 
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white font-bold py-4 rounded-xl hover:bg-blue-700 transition-colors shadow-lg shadow-blue-200"
+              className="w-full btn-gradient py-5 rounded-2xl font-black text-lg uppercase tracking-widest mt-4"
             >
-              เข้าสู่ระบบ
+              ยืนยันตัวตน
             </button>
           </form>
         </div>
-        <div className="p-6 bg-gray-50 text-center text-xs text-gray-400">
-          ระบบบริหารจัดการข้อมูล W9 v1.0.0
+        <div className="px-12 py-6 bg-slate-50/50 border-t border-slate-100 text-center">
+            <p className="text-[10px] font-black text-slate-300 tracking-[0.3em] uppercase">Security Level 1.0.0</p>
         </div>
       </div>
     </div>
