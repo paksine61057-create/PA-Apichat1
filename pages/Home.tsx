@@ -1,111 +1,113 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { BookOpen, Users, Award, ChevronRight, CheckCircle2, Star, Play } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { BookOpen, Users, Award, Home as HomeIcon, ChevronRight, FileText, Globe } from 'lucide-react';
 import { SECTIONS } from '../constants';
 import { AspectType } from '../types';
 
 const Home: React.FC = () => {
+  const location = useLocation();
+
   return (
-    <div className="animate-in fade-in duration-700">
-      {/* Hero Section */}
-      <section className="relative bg-white pt-20 pb-32 overflow-hidden">
-        <div className="absolute top-0 right-0 w-1/3 h-full bg-slate-50/50 -skew-x-12 translate-x-1/2 -z-10"></div>
-        <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <div>
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-xs font-bold mb-8">
-              <Star size={14} className="fill-blue-600" /> แฟ้มผลงานอิเล็กทรอนิกส์ (D-GPA)
-            </div>
-            <h1 className="text-5xl lg:text-6xl font-black text-slate-900 leading-[1.15] mb-6 heading-formal">
-              ประเมินวิทยฐานะ <br />
-              <span className="accent-gradient-text">ตามเกณฑ์ ว9/2564</span>
-            </h1>
-            <p className="text-lg text-slate-500 leading-relaxed mb-10 max-w-xl">
-              รวบรวมหลักฐานและผลการปฏิบัติงานเชิงประจักษ์ 3 ด้าน 15 ตัวชี้วัด 
-              อย่างเป็นระบบ สวยงาม และตรวจสอบได้ง่ายสำหรับคณะกรรมการ
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <Link to={`/aspect/${AspectType.ASPECT_1}`} className="btn-primary-gradient px-8 py-4">
-                เข้าชมผลงานทั้งหมด <ChevronRight size={18} />
-              </Link>
-              <button className="btn-outline px-8 py-4">
-                <Play size={18} fill="currentColor" /> วีดิทัศน์แนะนำตัว
-              </button>
-            </div>
-          </div>
-
-          <div className="relative">
-            <div className="absolute -inset-4 bg-gradient-to-tr from-blue-100 to-pink-100 blur-3xl opacity-30 -z-10"></div>
-            <div className="bg-white p-4 rounded-[2.5rem] shadow-2xl border border-slate-100">
-              <div className="relative rounded-[2rem] overflow-hidden aspect-[4/5]">
-                <img 
-                  src="https://images.unsplash.com/photo-1544717297-fa154da09f5b?auto=format&fit=crop&q=80&w=800" 
-                  className="w-full h-full object-cover" 
-                  alt="Teacher Portrait" 
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent"></div>
-                <div className="absolute bottom-8 left-8 right-8 text-white">
-                  <h2 className="text-3xl font-bold heading-formal">นายสมชาย มุ่งมั่นสอน</h2>
-                  <p className="text-white/80 font-medium mt-1">วิทยฐานะครูชำนาญการพิเศษ (คณิตศาสตร์)</p>
-                  <div className="mt-4 flex gap-2">
-                    <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-lg text-xs font-bold border border-white/20">รอบปีงบประมาณ 2567</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+    <div className="layout-container">
+      {/* Sidebar - Fixed on left */}
+      <aside className="sidebar-fixed">
+        <div className="py-8 px-6 border-b border-slate-200 mb-4">
+          <h2 className="text-xs font-bold text-slate-400 uppercase tracking-widest">Main Menu</h2>
         </div>
-      </section>
+        <nav className="flex-1">
+          <Link to="/" className={`nav-item-google ${location.pathname === '/' ? 'active' : ''}`}>
+            <HomeIcon size={18} />
+            <span>หน้าแรก</span>
+          </Link>
+          
+          <div className="mt-6 px-6 mb-2">
+            <h2 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">การประเมิน ว9</h2>
+          </div>
+          
+          {Object.values(SECTIONS).map((section) => (
+            <Link 
+              key={section.id} 
+              to={`/aspect/${section.id}`} 
+              className={`nav-item-google ${location.pathname.includes(section.id) ? 'active' : ''}`}
+            >
+              {section.id === AspectType.ASPECT_1 && <BookOpen size={18} />}
+              {section.id === AspectType.ASPECT_2 && <Users size={18} />}
+              {section.id === AspectType.ASPECT_3 && <Award size={18} />}
+              <span>ด้านที่ {section.id.split('_')[1]}</span>
+            </Link>
+          ))}
+        </nav>
+        
+        <div className="p-6 border-t border-slate-200">
+          <p className="text-[10px] text-slate-400 font-medium">© 2024 Digital Portfolio System</p>
+        </div>
+      </aside>
 
-      {/* Aspects Navigation */}
-      <section className="max-w-7xl mx-auto px-4 -mt-16 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {[AspectType.ASPECT_1, AspectType.ASPECT_2, AspectType.ASPECT_3].map((type) => {
-            const section = SECTIONS[type];
-            const Icon = type === AspectType.ASPECT_1 ? BookOpen : type === AspectType.ASPECT_2 ? Users : Award;
-            const accentColor = type === AspectType.ASPECT_1 ? 'text-blue-600' : type === AspectType.ASPECT_2 ? 'text-emerald-600' : 'text-purple-600';
-            const bgColor = type === AspectType.ASPECT_1 ? 'bg-blue-50' : type === AspectType.ASPECT_2 ? 'bg-emerald-50' : 'bg-purple-50';
+      {/* Main Content Area */}
+      <main className="main-content-scroll fade-in-up">
+        <div className="max-w-5xl mx-auto px-8 py-12">
+          {/* Profile Section */}
+          <section className="profile-card mb-16">
+            <div className="w-48 h-48 md:w-56 md:h-56 rounded-2xl overflow-hidden bg-slate-100 flex-shrink-0 border-4 border-white shadow-lg">
+              <img 
+                src="https://images.unsplash.com/photo-1544717297-fa154da09f5b?auto=format&fit=crop&q=80&w=400" 
+                alt="Teacher Profile"
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="flex-1 text-center md:text-left">
+              <h1 className="text-4xl font-bold text-slate-900 heading-formal mb-2">นายสมชาย มุ่งมั่นสอน</h1>
+              <p className="text-xl text-blue-600 font-medium mb-4">วิทยฐานะครูชำนาญการพิเศษ (คณิตศาสตร์)</p>
+              <div className="h-1 w-20 bg-blue-600 mx-auto md:mx-0 mb-6"></div>
+              <p className="text-slate-500 leading-relaxed max-w-2xl">
+                ยินดีต้อนรับสู่ระบบจัดเก็บผลงานดิจิทัล รวบรวมหลักฐานและผลการปฏิบัติงาน 
+                เพื่อประกอบการพิจารณาประเมินวิทยฐานะตามเกณฑ์ ว9/2564 
+                เน้นการจัดการเรียนรู้เชิงรุก (Active Learning) และผลลัพธ์ของผู้เรียนเป็นสำคัญ
+              </p>
+            </div>
+          </section>
 
-            return (
-              <Link to={`/aspect/${type}`} key={type} className="official-card rounded-3xl p-8 group">
-                <div className={`w-14 h-14 ${bgColor} ${accentColor} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
-                  <Icon size={28} />
+          {/* Quick Access Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            {Object.values(SECTIONS).map((section) => (
+              <Link 
+                key={section.id} 
+                to={`/aspect/${section.id}`} 
+                className="aspect-grid-card group hover:bg-white hover:border-blue-200 hover:shadow-lg transition-all"
+              >
+                <div className={`w-12 h-12 rounded-lg flex items-center justify-center mb-4 ${section.bgClass} ${section.colorClass}`}>
+                  {section.id === AspectType.ASPECT_1 ? <BookOpen size={24} /> : section.id === AspectType.ASPECT_2 ? <Users size={24} /> : <Award size={24} />}
                 </div>
-                <h3 className="text-xl font-bold text-slate-800 mb-3 heading-formal">{section.title}</h3>
-                <p className="text-sm text-slate-500 leading-relaxed mb-6 line-clamp-2">
+                <h3 className="font-bold text-slate-900 mb-2 heading-formal">{section.title}</h3>
+                <p className="text-xs text-slate-500 mb-6 leading-relaxed">
                   {section.description}
                 </p>
-                <div className={`flex items-center gap-2 text-sm font-bold ${accentColor}`}>
-                  ดูรายละเอียด <ChevronRight size={16} />
+                <div className="flex items-center gap-1 text-xs font-bold text-blue-600 uppercase tracking-wider">
+                  คลิกเพื่อดูข้อมูล <ChevronRight size={14} />
                 </div>
               </Link>
-            );
-          })}
-        </div>
-      </section>
+            ))}
+          </div>
 
-      {/* Stats/Features Section */}
-      <section className="max-w-7xl mx-auto px-4 py-24">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold text-slate-900 heading-formal mb-4">ทำไมต้องแฟ้มผลงานดิจิทัล?</h2>
-          <div className="section-divider mx-auto"></div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
-          {[
-            { title: 'ความถูกต้อง', desc: 'ครบถ้วนตามเกณฑ์ตัวชี้วัด ก.ค.ศ.', icon: CheckCircle2 },
-            { title: 'ตรวจสอบได้', desc: 'หลักฐานเชิงประจักษ์ชัดเจน ตรวจง่าย', icon: CheckCircle2 },
-            { title: 'ความสวยงาม', desc: 'จัดรูปแบบมืออาชีพ อ่านง่าย', icon: CheckCircle2 },
-            { title: 'เข้าถึงง่าย', desc: 'เปิดดูได้ทุกที่ ทุกเวลา ทุกอุปกรณ์', icon: CheckCircle2 },
-          ].map((feat, idx) => (
-            <div key={idx} className="flex flex-col items-center text-center">
-              <div className="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center text-blue-600 mb-4 border border-slate-100">
-                <feat.icon size={24} />
-              </div>
-              <h4 className="font-bold text-slate-900 mb-2">{feat.title}</h4>
-              <p className="text-sm text-slate-500">{feat.desc}</p>
+          {/* Institutional Info */}
+          <div className="bg-slate-900 text-white rounded-2xl p-10 flex flex-col md:flex-row items-center justify-between gap-8">
+            <div>
+              <h2 className="text-2xl font-bold heading-formal mb-2">โรงเรียนสาธิตแห่งอนาคต</h2>
+              <p className="text-slate-400 text-sm">สังกัดสำนักงานเขตพื้นที่การศึกษามัธยมศึกษา เขต 1</p>
             </div>
-          ))}
+            <div className="flex gap-4">
+              <div className="text-center px-6 py-2 border-r border-slate-700">
+                <p className="text-2xl font-bold">15</p>
+                <p className="text-[10px] uppercase tracking-widest text-slate-500">ตัวชี้วัด</p>
+              </div>
+              <div className="text-center px-6 py-2">
+                <p className="text-2xl font-bold">3</p>
+                <p className="text-[10px] uppercase tracking-widest text-slate-500">ด้านหลัก</p>
+              </div>
+            </div>
+          </div>
         </div>
-      </section>
+      </main>
     </div>
   );
 };
